@@ -1,15 +1,5 @@
 import { connection } from "../db.js";
 
-export async function listCategories (req, res){
-    try {
-        const categories = await connection.query('SELECT * FROM categories;');
-        res.send(categories.rows); 
-    } catch (error) {
-        console.log(error);
-        res.send(`${error.name}: ${error.message}`);
-    }
-};
-
 export async function insertCategories (req, res){
     const {name} = req.body;
     if(!name){
@@ -25,3 +15,14 @@ export async function insertCategories (req, res){
         res.send(`${error.name}: ${error.message}`);
     }
 }
+
+export async function listCategories (req, res){
+    try {
+        const categories = await connection.query('SELECT * FROM categories;');
+        res.send(categories.rows); 
+    } catch (error) {
+        console.log(error);
+        res.send(`${error.name}: ${error.message}`);
+    }
+};
+
