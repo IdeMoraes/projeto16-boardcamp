@@ -1,6 +1,6 @@
 import { connection } from "../db.js";
 
-export async function insertGames (req, res){
+export async function insertGame (req, res){
     const {name, image, stockTotal, categoryId, pricePerDay} = req.body;
     if(!name || !image || !stockTotal || !categoryId || !pricePerDay){
         return res.sendStatus(400);

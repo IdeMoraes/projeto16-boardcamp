@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { insertGames, listGames } from "../controllers/gamesController.js";
+import { insertGame, listGames } from "../controllers/gamesController.js";
 
 const gamesRouter = Router();
-gamesRouter.post('/games', insertGames);
+gamesRouter.post('/games', insertGame);
 gamesRouter.get('/games', listGames);
 
 export default gamesRouter;

@@ -1,6 +1,6 @@
 import { connection } from "../db.js";
 
-export async function insertCategories (req, res){
+export async function insertCategory (req, res){
     const {name} = req.body;
     if(!name){
         res.sendStatus(400);
