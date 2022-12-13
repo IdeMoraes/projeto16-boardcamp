@@ -4,8 +4,12 @@ export async function insertCustomer (req, res){
     const {name, phone, cpf, birthday} = req.body;
     if(!name || !phone || !cpf || !birthday){
         return res.sendStatus(400);
-    }
+    };
     try {
+        const cpfValidator = await connection.query('SELECT id FROM customers WHERE cpf = $1', [cpf]);
+        if (cpfValidator.rowCount >= 1) {
+          return res.sendStatus(409);
+        };
         const result = await connection.query(`INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)`, [name, phone, cpf, birthday]);
         if (result.rowCount>=1){
             res.sendStatus(201);
@@ -23,6 +27,10 @@ export async function updateCustomer (req, res){
         return res.sendStatus(400);
     }
     try {
+        const cpfValidator = await connection.query('SELECT id FROM customers WHERE cpf = $1', [cpf]);
+        if (cpfValidator.rowCount >= 1) {
+          return res.sendStatus(409);
+        };
         const result = await connection.query(`UPDATE customers SET name='${name}', phone='${phone}', cpf='${cpf}', birthday='${birthday}' WHERE id = ${id};`);
         if (result.rowCount>=1){
             res.sendStatus(200);
