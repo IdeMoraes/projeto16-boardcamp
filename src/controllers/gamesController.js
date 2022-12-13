@@ -6,10 +6,18 @@ export async function insertGame (req, res){
         return res.sendStatus(400);
     }
     try {
+        const categoryIdValidator = await connection.query('SELECT id FROM categories WHERE id = $1', [categoryId]);
+        if (categoryIdValidator.rowCount === 0) {
+          return res.sendStatus(400);
+        };
+        const repeatedGameValidator = await connection.query('SELECT id FROM games WHERE name=$1', [name]);
+        if (repeatedGameValidator.rowCount >= 1) {
+          return res.sendStatus(409);
+        };
         const result = await connection.query(`INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1, $2, $3, $4, $5);`, [name, image, stockTotal, categoryId, pricePerDay]);
         if (result.rowCount>=1){
             res.sendStatus(201);
-        }
+        };
     } catch (error) {
         console.log(error);
         res.send(`${error.name}: ${error.message}`);
