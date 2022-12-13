@@ -79,6 +79,35 @@ export async function deleteRental (req, res){
 
 export async function listRentals (req, res){
     try {
+        const rentals = await connection.query(`
+        SELECT rentals.*,
+        customers.id AS "customer.id", customers.name AS "customer.name",
+        games.id AS "game.id", games.name AS "game.name", games."categoryId" AS "game.categoryId",
+        categories.name AS "game.categoryName"
+        FROM customers
+        JOIN rentals ON customers.id = rentals."customerId"
+        JOIN games ON games.id = rentals."gameId"
+        JOIN categories ON games."categoryId" = categories.id;
+        `);
+        const formattedList = rentals.rows.map((rental)=>({
+            id: rental.id,
+            customerId: rental.customerId,
+            gameId: rental.gameId,
+            rentDate: rental.rentDate,
+            originalPrice: rental.originalPrice,
+            delayFee: rental.delayFee,
+            customer:{
+                id: rental['customer.id'],
+                name: rental['customer.name']
+            },
+            game:{
+                id: rental['game.id'],
+                name: rental['game.name'],
+                categoryId: rental['game.categoryId'],
+                categoryName: rental['game.categoryName']
+            }
+        }));
+        res.send(formattedList);
     } catch (error) {
         console.log(error);
         res.send(`${error.name}: ${error.message}`);
